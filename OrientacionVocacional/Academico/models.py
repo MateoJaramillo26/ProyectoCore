@@ -1,11 +1,15 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your models here.
 class Universidad(models.Model):
     id_universidad = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=200, verbose_name="Nombre")
     direccion = models.CharField(max_length=200, verbose_name="Dirección")
-    ciudad = models.CharField(max_length=100, verbose_name="Ciudad")
+    ciudad = models.ForeignKey('Ciudad', on_delete=models.CASCADE)
+    pais = models.ForeignKey('Pais', on_delete=models.CASCADE)
     telefono = models.CharField(max_length=15, verbose_name="Teléfono")
     sitio_web = models.URLField(verbose_name="Sitio Web")
 
@@ -21,9 +25,6 @@ class Clase(models.Model):
     nombre = models.CharField(max_length=100, verbose_name="Nombre")
     codigo = models.CharField(max_length=20, verbose_name="Código")
     creditos = models.IntegerField(verbose_name="Créditos")
-    aula = models.CharField(max_length=50, verbose_name="Aula")
-    horario = models.CharField(max_length=100, verbose_name="Horario")
-    periodo = models.CharField(max_length=50, verbose_name="Período")
     profesor = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'profesor'})
 
     def __str__(self):
@@ -47,3 +48,27 @@ class Calificacion(models.Model):
     class Meta:
         verbose_name = "Calificación"
         verbose_name_plural = "Calificaciones"
+        
+        
+class Pais(models.Model):
+    id_pais = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=100, verbose_name="Nombre")
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name = "País"
+        verbose_name_plural = "Países"
+        
+class Ciudad(models.Model):
+    id_ciudad = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=100, verbose_name="Nombre")
+    pais = models.ForeignKey(Pais, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name = "Ciudad"
+        verbose_name_plural = "Ciudades"

@@ -17,6 +17,22 @@ class User(AbstractUser):
     fecha_nacimiento = models.DateField(null=True, blank=True, verbose_name="Fecha de Nacimiento")
     direccion = models.TextField(null=True, blank=True, verbose_name="Dirección")
 
+    # Override groups and user_permissions with related_name
+    groups = models.ManyToManyField(
+        'auth.Group',
+        verbose_name='groups',
+        blank=True,
+        related_name='custom_user_set',
+        related_query_name='custom_user'
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        verbose_name='user permissions',
+        blank=True,
+        related_name='custom_user_set',
+        related_query_name='custom_user'
+    )
+
     def is_estudiante(self):
         return self.role == 'estudiante'
 
