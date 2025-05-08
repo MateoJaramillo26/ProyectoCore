@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+pylint = "*"
+django-ckeditor = "*"
+pillow = "*"
+pylint-django = "*"
+pylint-celery = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.13"
