@@ -9,7 +9,7 @@ class User(AbstractUser):
     )
     role = models.CharField(max_length=10, choices=ROLES, verbose_name="Rol")
     cedula = models.CharField(max_length=10, unique=True, verbose_name="Cédula")
-    telefono = models.CharField(max_length=15, verbose_name="Teléfono")
+    telefono = models.CharField(max_length=10, verbose_name="Teléfono")
 
     # Campos opcionales para perfiles específicos
     especialidad = models.CharField(max_length=100, null=True, blank=True, verbose_name="Especialidad")
@@ -47,6 +47,16 @@ class User(AbstractUser):
         if self.cedula:
             if not self.validar_cedula_ecuatoriana(self.cedula):
                 raise ValidationError({'cedula': 'La cédula ingresada no es una cédula ecuatoriana válida'})
+        
+        if self.telefono:
+            # Asegurar que el teléfono contenga solo dígitos
+            if not self.telefono.isdigit():
+                raise ValidationError({'telefono': 'El teléfono debe contener solo números.'})
+            # Asegurar que el teléfono tenga exactamente 10 dígitos
+            # Esta validación es redundante si max_length=10 y el campo es obligatorio,
+            # pero es buena práctica tenerla para claridad y si el campo fuera opcional.
+            if len(self.telefono) != 10:
+                raise ValidationError({'telefono': 'El teléfono debe tener exactamente 10 dígitos.'})
 
     def validar_cedula_ecuatoriana(self, cedula):
         # Verificar longitud

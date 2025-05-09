@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator
 
 User = get_user_model()
 
@@ -38,7 +39,7 @@ class Calificacion(models.Model):
     id_calificacion = models.AutoField(primary_key=True)
     estudiante = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'estudiante'})
     clase = models.ForeignKey(Clase, on_delete=models.CASCADE)
-    nota = models.FloatField(verbose_name="Nota")
+    nota = models.FloatField(verbose_name="Nota", validators=[MaxValueValidator(10)])
     fecha_registro = models.DateField(auto_now_add=True, verbose_name="Fecha de Registro")
     comentario = models.TextField(blank=True, null=True, verbose_name="Comentario")
 
